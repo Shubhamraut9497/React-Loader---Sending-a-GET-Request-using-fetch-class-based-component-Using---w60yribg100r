@@ -23,10 +23,12 @@ const App = () => {
   const handleOnClick = async () => {
     setIsLoading(LoadingStatus.IN_PROGRESS);
     try {
-      const response = await fetch(`${BASE_URL}/${userId}`);
-      const data = await response.json();
-      setUserData(data);
-      setIsLoading(LoadingStatus.SUCCESS);
+      setTimeout(async () => {
+        const response = await fetch(`${BASE_URL}/${userId}`);
+        const data = await response.json();
+        setUserData(data);
+        setIsLoading(LoadingStatus.SUCCESS);
+      }, 2000);
     } catch (error) {
       console.error(error);
       setIsLoading(LoadingStatus.NOT_STARTED);
@@ -36,7 +38,7 @@ const App = () => {
   const onChangeHandler = (event) => {
     setUserId(event.target.value);
   };
-
+  if (isLoading === LoadingStatus.IN_PROGRESS) return <Loader />;
   return (
     <div id="main">
       <label htmlFor="number">Enter an id for the user between 1 to 100</label>
@@ -51,9 +53,11 @@ const App = () => {
       <button id="btn" onClick={handleOnClick}>
         Get User
       </button>
-      {isLoading === LoadingStatus.IN_PROGRESS ? <Loader /> : null}
+
       <div id="data">
-        {isLoading === LoadingStatus.SUCCESS ? (
+        {isLoading === LoadingStatus.SUCCESS &&
+        isLoading !== LoadingStatus.IN_PROGRESS &&
+        isLoading !== LoadingStatus.NOT_STARTED ? (
           <>
             <h4 id="id">ID: {userData.id}</h4>
             <h4 id="email">Email: {userData.email}</h4>
@@ -70,4 +74,5 @@ const App = () => {
 };
 
 export default App;
+;
 
