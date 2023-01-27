@@ -38,7 +38,7 @@ const App = () => {
   const onChangeHandler = (event) => {
     setUserId(event.target.value);
   };
-  if (isLoading === LoadingStatus.IN_PROGRESS) return <Loader />;
+
   return (
     <div id="main">
       <label htmlFor="number">Enter an id for the user between 1 to 100</label>
@@ -53,11 +53,9 @@ const App = () => {
       <button id="btn" onClick={handleOnClick}>
         Get User
       </button>
-
+      {isLoading === LoadingStatus.IN_PROGRESS ? <Loader /> : null}
       <div id="data">
-        {isLoading === LoadingStatus.SUCCESS &&
-        isLoading !== LoadingStatus.IN_PROGRESS &&
-        isLoading !== LoadingStatus.NOT_STARTED ? (
+        {isLoading === LoadingStatus.SUCCESS ? (
           <>
             <h4 id="id">ID: {userData.id}</h4>
             <h4 id="email">Email: {userData.email}</h4>
@@ -65,7 +63,7 @@ const App = () => {
             <h4 id="phone">Phone: {userData.phone}</h4>
             <h4 id="website">Website: {userData.website}</h4>
           </>
-        ) : (
+        ) : isLoading === LoadingStatus.IN_PROGRESS ? null : (
           <h1>Click on the button to get the user</h1>
         )}
       </div>
@@ -74,5 +72,5 @@ const App = () => {
 };
 
 export default App;
-;
+
 
