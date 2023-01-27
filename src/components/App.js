@@ -5,7 +5,7 @@ import Loader from "./Loader";
 const LoadingStatus = {
   NOT_STARTED: "NOT_STARTED",
   IN_PROGRESS: "IN_PROGRESS",
-  SUCCESS: "SUCCESS",
+  SUCCESS: "SUCCESS"
 };
 
 const App = () => {
@@ -17,10 +17,21 @@ const App = () => {
     email: "",
     name: "",
     phone: "",
-    webiste: "",
+    webiste: ""
   });
 
-  const handleOnClick = () => {};
+  const handleOnClick = async () => {
+    setIsLoading(LoadingStatus.IN_PROGRESS);
+    try {
+      const response = await fetch(`${BASE_URL}/${userId}`);
+      const data = await response.json();
+      setUserData(data);
+      setIsLoading(LoadingStatus.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(LoadingStatus.NOT_STARTED);
+    }
+  };
 
   const onChangeHandler = (event) => {
     setUserId(event.target.value);
@@ -35,22 +46,28 @@ const App = () => {
         onChange={onChangeHandler}
         id="input"
         min={1}
-        max={10}
+        max={100}
       />
       <button id="btn" onClick={handleOnClick}>
         Get User
       </button>
-
+      {isLoading === LoadingStatus.IN_PROGRESS ? <Loader /> : null}
       <div id="data">
-        <h1>Click on the button to get the user</h1>
-        <h4 id="id">{userData.id}</h4>
-        <h4 id="email">{userData.email}</h4>
-        <h4 id="name">{userData.name}</h4>
-        <h4 id="phone">{userData.phone}</h4>
-        <h4 id="website">{userData.website}</h4>
+        {isLoading === LoadingStatus.SUCCESS ? (
+          <>
+            <h4 id="id">ID: {userData.id}</h4>
+            <h4 id="email">Email: {userData.email}</h4>
+            <h4 id="name">Name: {userData.name}</h4>
+            <h4 id="phone">Phone: {userData.phone}</h4>
+            <h4 id="website">Website: {userData.website}</h4>
+          </>
+        ) : (
+          <h1>Click on the button to get the user</h1>
+        )}
       </div>
     </div>
   );
 };
 
 export default App;
+
